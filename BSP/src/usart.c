@@ -314,6 +314,7 @@ static void GPIO_Configuration(void)
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
     GPIO_InitStructure.GPIO_Pin = UART1_GPIO_TX;
     GPIO_Init(UART1_GPIO, &GPIO_InitStructure);
+    
 #elif defined(RT_USING_REMAP_UART1)
     /* Configure USART Remap Rx/tx PIN */
     GPIO_PinRemapConfig(GPIO_Remap_USART1,ENABLE);

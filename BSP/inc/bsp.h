@@ -65,6 +65,9 @@ enum {
 #define LED_LED2_ON                GPIO_SetBits  (GPIOA,GPIO_Pin_12)       //LED1
 #define LED_LED2_OFF               GPIO_ResetBits(GPIOA,GPIO_Pin_12)       //LED2
 
+//#define RS485_TX_ENABLE GPIO_SetBits(GPIOE,GPIO_Pin_10)//PE10 =1 发送使能
+//#define RS485_RX_ENABLE GPIO_ResetBits(GPIOE,GPIO_Pin_10)//PE10 =0 接受使能
+
 void rt_hw_board_init(void);
 
 void IWDG_Configuration(void);

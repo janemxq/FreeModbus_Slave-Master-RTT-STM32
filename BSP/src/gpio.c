@@ -29,7 +29,7 @@ struct pin_index
 
 static const struct pin_index pins[] =
 {
-    { 0, RCC_APB2Periph_GPIOA, GPIOA, GPIO_Pin_1},
+    { 0, RCC_APB2Periph_GPIOE, GPIOE, GPIO_Pin_10},//485控制IO
     { 1, RCC_APB2Periph_GPIOB, GPIOB, GPIO_Pin_1},
 };
 

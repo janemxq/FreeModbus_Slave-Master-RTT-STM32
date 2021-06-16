@@ -41,10 +41,10 @@ void thread_entry_SysMonitor(void* parameter)
         usSRegHoldBuf[S_HD_CPU_USAGE_MAJOR] = CpuUsageMajor;
         usSRegHoldBuf[S_HD_CPU_USAGE_MINOR] = CpuUsageMinor;
         LED_LED1_ON;
-        LED_LED2_ON;
+        // LED_LED2_ON;
         rt_thread_delay(DELAY_SYS_RUN_LED);
         LED_LED1_OFF;
-        LED_LED2_OFF;
+        // LED_LED2_OFF;
         rt_thread_delay(DELAY_SYS_RUN_LED);
         IWDG_Feed(); //feed the dog
         //Test Modbus Master
