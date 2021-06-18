@@ -441,6 +441,21 @@
               <FileType>1</FileType>
               <FilePath>..\BSP\src\gpio.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_PCF8563.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\bsp_PCF8563.c</FilePath>
+            </File>
+            <File>
+              <FileName>sflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\sflash.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\spi.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1282,6 +1297,21 @@
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\BSP\src\gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_PCF8563.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\bsp_PCF8563.c</FilePath>
+            </File>
+            <File>
+              <FileName>sflash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\sflash.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\BSP\src\spi.c</FilePath>
             </File>
           </Files>
         </Group>

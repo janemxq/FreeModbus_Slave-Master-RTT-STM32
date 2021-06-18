@@ -24,6 +24,7 @@
 #include <rthw.h>
 #include <rtthread.h>
 #include "usart.h"
+#include "spi.h"
 /*
 *********************************************************************************************************
 *                                            LOCAL TABLES
@@ -49,6 +50,8 @@ void rt_hw_board_init()
     BSP_Init();
     stm32_hw_usart_init();
     stm32_hw_pin_init();
+    pcf8563_InitI2c();
+    SPI_Initializes();
 }
 
 /*******************************************************************************
@@ -74,6 +77,8 @@ static void RCC_Configuration(void)
     RCC_AHBPeriphClockCmd(RCC_AHBPeriph_DMA1, ENABLE);//使能DMA时钟
     /* Enable ADC1 and GPIOC clock */
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 , ENABLE);
+   /* 使能APB1时钟 */
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4|RCC_APB1Periph_SPI2, ENABLE);
 }
 
 /*******************************************************************************
@@ -113,8 +118,8 @@ static void GPIO_Configuration(void)
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8 | GPIO_Pin_11 | GPIO_Pin_12;  //继电器1  LED1  LED2
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_14 | GPIO_Pin_15;  //蜂鸣器 继电器3   继电器2
-    GPIO_Init(GPIOB, &GPIO_InitStructure);
+    // GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_14 | GPIO_Pin_15;  //蜂鸣器 继电器3   继电器2
+    // GPIO_Init(GPIOB, &GPIO_InitStructure);
 
     /*************数字输入IO初始化*********************/
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;

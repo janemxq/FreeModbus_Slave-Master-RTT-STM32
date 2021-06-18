@@ -56,7 +56,7 @@ enum {
     /* modbus slave 485 receive and transmit control pin index */
     MODBUS_SLAVE_RT_CONTROL_PIN_INDEX = 0,
     /* modbus master 485 receive and transmit control pin index */
-    MODBUS_MASTER_RT_CONTROL_PIN_INDEX = 1,
+    MODBUS_MASTER_RT_CONTROL_PIN_INDEX = 0,
 };
 
 #define LED_LED1_ON                GPIO_SetBits  (GPIOA,GPIO_Pin_11)       //LED1

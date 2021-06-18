@@ -1,5 +1,6 @@
 #include "app_task.h"
-
+#include "bsp_PCF8563.h"
+#include "sflash.h"
 #ifdef __CC_ARM
 extern int Image$$RW_IRAM1$$ZI$$Limit;
 #elif __ICCARM__
@@ -34,12 +35,26 @@ struct rt_thread thread_ModbusMasterPoll;
 void thread_entry_SysMonitor(void* parameter)
 {
     eMBMasterReqErrCode    errorCode = MB_MRE_NO_ERR;
+	uint16_t SFlash_ID ;
     uint16_t errorCount = 0;
-    while (1)
+    uint8_t  read_buf[6];
+
+    RTC_T rt;
+    rt.year=2018;
+		rt.month=8;
+		rt.day=22;
+		rt.hour=23;
+		rt.minute=23;
+		rt.second=0;
+		pcf8563_SetDateTime(&rt);
+   SFlash_ID = SFLASH_ReadID();
+	while (1)
     {
         cpu_usage_get(&CpuUsageMajor, &CpuUsageMinor);
         usSRegHoldBuf[S_HD_CPU_USAGE_MAJOR] = CpuUsageMajor;
         usSRegHoldBuf[S_HD_CPU_USAGE_MINOR] = CpuUsageMinor;
+        pcf8563_GetDateTime(&rt);
+        SFLASH_ReadNByte(read_buf, 0, 6);              //从地址0，连续读出6字节数据
         LED_LED1_ON;
         // LED_LED2_ON;
         rt_thread_delay(DELAY_SYS_RUN_LED);
@@ -50,14 +65,17 @@ void thread_entry_SysMonitor(void* parameter)
         //Test Modbus Master
         usModbusUserData[0] = (USHORT)(rt_tick_get()/10);
         usModbusUserData[1] = (USHORT)(rt_tick_get()%10);
-        ucModbusUserData[0] = 0x1F;
+        usModbusUserData[0] = rt.minute;
+        usModbusUserData[1] = rt.second;
+        usModbusUserData[0] = read_buf[0];
+        usModbusUserData[1] = read_buf[1];
 //      errorCode = eMBMasterReqReadDiscreteInputs(1,3,8,RT_WAITING_FOREVER);
 //      errorCode = eMBMasterReqWriteMultipleCoils(1,3,5,ucModbusUserData,RT_WAITING_FOREVER);
-        errorCode = eMBMasterReqWriteCoil(1,8,0xFF00,RT_WAITING_FOREVER);
+//      errorCode = eMBMasterReqWriteCoil(1,8,0xFF00,RT_WAITING_FOREVER);
 //      errorCode = eMBMasterReqReadCoils(1,3,8,RT_WAITING_FOREVER);
 //      errorCode = eMBMasterReqReadInputRegister(1,3,2,RT_WAITING_FOREVER);
-//      errorCode = eMBMasterReqWriteHoldingRegister(1,3,usModbusUserData[0],RT_WAITING_FOREVER);
-//      errorCode = eMBMasterReqWriteMultipleHoldingRegister(1,3,2,usModbusUserData,RT_WAITING_FOREVER);
+    //  errorCode = eMBMasterReqWriteHoldingRegister(1,3,usModbusUserData[0],RT_WAITING_FOREVER);
+     errorCode = eMBMasterReqWriteMultipleHoldingRegister(1,3,2,usModbusUserData,RT_WAITING_FOREVER);
 //      errorCode = eMBMasterReqReadHoldingRegister(1,3,2,RT_WAITING_FOREVER);
 //      errorCode = eMBMasterReqReadWriteMultipleHoldingRegister(1,3,2,usModbusUserData,5,2,RT_WAITING_FOREVER);
         //记录出错次数
@@ -91,7 +109,7 @@ void thread_entry_ModbusSlavePoll(void* parameter)
 //******************************************************************
 void thread_entry_ModbusMasterPoll(void* parameter)
 {
-    eMBMasterInit(MB_RTU, 2, 115200,  MB_PAR_EVEN);
+    eMBMasterInit(MB_RTU, 1, 115200,  MB_PAR_EVEN);
     eMBMasterEnable();
     while (1)
     {
@@ -112,11 +130,11 @@ int rt_application_init(void)
             thread_SysMonitor_Prio, 5);
     rt_thread_startup(&thread_SysMonitor);
 
-    rt_thread_init(&thread_ModbusSlavePoll, "MBSlavePoll",
-            thread_entry_ModbusSlavePoll, RT_NULL, thread_ModbusSlavePoll_stack,
-            sizeof(thread_ModbusSlavePoll_stack), thread_ModbusSlavePoll_Prio,
-            5);
-    rt_thread_startup(&thread_ModbusSlavePoll);
+    // rt_thread_init(&thread_ModbusSlavePoll, "MBSlavePoll",
+    //         thread_entry_ModbusSlavePoll, RT_NULL, thread_ModbusSlavePoll_stack,
+    //         sizeof(thread_ModbusSlavePoll_stack), thread_ModbusSlavePoll_Prio,
+    //         5);
+    // rt_thread_startup(&thread_ModbusSlavePoll);
 
     rt_thread_init(&thread_ModbusMasterPoll, "MBMasterPoll",
             thread_entry_ModbusMasterPoll, RT_NULL, thread_ModbusMasterPoll_stack,
